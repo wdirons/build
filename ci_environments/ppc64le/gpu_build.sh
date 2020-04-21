@@ -47,7 +47,7 @@ if [[ $rc -ne 0 ]]; then
 fi
 
 bazel --host_jvm_args="-Xms512m" --host_jvm_args="-Xmx4096m" build \
-      -c opt --config=v2 --local_resources 8192,4.0,1.0 \
+      -c opt --config=v2 --local_cpu_resources 4 --local_ram_resources 8192 \
       //tensorflow/tools/pip_package:build_pip_package
 
 bazel-bin/tensorflow/tools/pip_package/build_pip_package --nightly_flag ./tensorflow_pkg

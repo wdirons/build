@@ -37,7 +37,8 @@ if [[ $rc -ne 0 ]]; then
     ./tensorflow/tools/ci_build/update_version.py --nightly
 fi
 
-BAZEL_LINKLIBS=-l%:libstdc++.a bazel build -c opt --config=v2 --local_resources 4096,4.0,1.0 \
+BAZEL_LINKLIBS=-l%:libstdc++.a bazel build -c opt --config=v2 \
+    --local_cpu_resources 4 --local_ram_resources 4096 \
     //tensorflow/tools/pip_package:build_pip_package
 
 bazel-bin/tensorflow/tools/pip_package/build_pip_package --nightly_flag --cpu ./tensorflow_pkg
