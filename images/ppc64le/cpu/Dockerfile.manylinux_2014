@@ -1,8 +1,9 @@
-#docker build -f Dockerfile.manylinux_2014 -t ibmcom/tensorflow-ppc64le:devel-manylinux2014 .
+# docker build -f Dockerfile.manylinux_2014 -t ibmcom/tensorflow-ppc64le:devel-manylinux2014 .
 FROM quay.io/pypa/manylinux2014_ppc64le
 
 ARG BAZEL_VERSION=3.0.0
-ENV PATH=/opt/python/cp36-cp36m/bin:$PATH
+ENV ORIGINAL_PATH=$PATH
+ENV PATH=/opt/python/cp36-cp36m/bin:$ORIGINAL_PATH
 
 RUN yum install -y java-11-openjdk-devel wget zip && \
     yum clean all && \
@@ -21,8 +22,33 @@ RUN mkdir /bazel && \
 RUN pip install six numpy wheel setuptools mock
 RUN pip install keras_applications keras_preprocessing --no-deps
 
-#To build in OSU's Jenkins environment
-#From https://github.com/osuosl/osl-dockerfiles/blob/master/centos-ppc64le/Dockerfile#L14-L31
+
+# Install pip packages for python 3.5
+ENV PATH=/opt/python/cp35-cp35m/bin:$ORIGINAL_PATH
+RUN pip install six numpy wheel setuptools mock
+RUN pip install keras_applications keras_preprocessing --no-deps
+
+# Install pip packages for python 3.6
+ENV PATH=/opt/python/cp36-cp36m/bin:$ORIGINAL_PATH
+RUN pip install six numpy wheel setuptools mock
+RUN pip install keras_applications keras_preprocessing --no-deps
+
+# Install pip packages for python 3.7
+ENV PATH=/opt/python/cp37-cp37m/bin:$ORIGINAL_PATH
+RUN pip install six numpy wheel setuptools mock
+RUN pip install keras_applications keras_preprocessing --no-deps
+
+# Install pip packages for python 3.8
+ENV PATH=/opt/python/cp38-cp38/bin:$ORIGINAL_PATH
+RUN pip install six numpy wheel setuptools mock
+RUN pip install keras_applications keras_preprocessing --no-deps
+
+# Default to python 3.6
+ENV PATH=/opt/python/cp36-cp36m/bin:$ORIGINAL_PATH
+
+
+# To build in OSU's Jenkins environment
+# From https://github.com/osuosl/osl-dockerfiles/blob/master/centos-ppc64le/Dockerfile#L14-L31
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=10000
